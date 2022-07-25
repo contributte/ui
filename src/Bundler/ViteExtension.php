@@ -50,7 +50,7 @@ class ViteExtension extends Extension
 			<<<'LATTE'
 				array_map(function($a) use ($basePath) {
 					echo '<script type="module" src="' . $basePath . $a. '"></script>';
-				}, $this->global->vite->css(%node));
+				}, $this->global->vite->js(%node));
 				%line
 				echo "\n";
 			LATTE,
