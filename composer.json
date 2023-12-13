@@ -20,7 +20,7 @@
     }
   ],
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.1",
     "latte/latte": "^3.0.2",
     "nette/di": "^3.0.13",
     "nette/utils": "^3.0.4"
