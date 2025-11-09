@@ -17,6 +17,51 @@ services:
 			- addExtension(App\Model\ViteExtension(%wwwDir%/dist/manifest.json, /dist))
 ```
 
+### Content Security Policy (CSP) Nonce Support
+
+The Vite extension automatically supports Content Security Policy (CSP) nonces. This allows you to enforce strict CSP policies while still loading scripts and stylesheets with Vite.
+
+The nonce value is automatically injected into `<script>` and `<link>` tags when available through the `uiNonce` global variable in Latte templates.
+
+#### Usage in Latte Templates
+
+```latte
+{vitejs 'assets/js/app.js'}
+{vitecss 'assets/js/app.js'}
+```
+
+When a nonce is set via the Nette application context, it will be automatically added to the generated tags:
+
+```html
+<script type="module" src="/dist/app.js" nonce="..."></script>
+<link rel="stylesheet" href="/dist/app.css" nonce="...">
+```
+
+#### Setting the Nonce in Your Application
+
+The nonce should be generated per-request and made available to templates through Nette's presenter or Latte engine. Here's an example:
+
+```php
+// In your BasePresenter or middleware
+public function beforeRender(): void
+{
+    // Generate a nonce for this request
+    $nonce = base64_encode(random_bytes(16));
+
+    // Make it available to templates
+    $this->template->uiNonce = $nonce;
+
+    // Add it to your CSP header
+    header("Content-Security-Policy: script-src 'nonce-{$nonce}'; style-src 'nonce-{$nonce}'");
+}
+```
+
+#### Security
+
+- The nonce is properly escaped using `htmlspecialchars()` to prevent XSS vulnerabilities
+- Special characters in nonce values are safely encoded
+- The nonce attribute is only added when a nonce value is present
+
 ## Examples
 
 ### Vite
