@@ -15,13 +15,10 @@ class ViteExtension extends Extension
 
 	protected string $base;
 
-	protected ?string $nonce;
-
-	public function __construct(string $file, string $base = '/', ?string $nonce = null)
+	public function __construct(string $file, string $base = '/')
 	{
 		$this->file = $file;
 		$this->base = $base;
-		$this->nonce = $nonce;
 	}
 
 	/**
@@ -41,7 +38,7 @@ class ViteExtension extends Extension
 	public function getProviders(): array
 	{
 		return [
-			'vite' => new ViteProvider($this->file, $this->base, $this->nonce),
+			'vite' => new ViteProvider($this->file, $this->base),
 		];
 	}
 
@@ -52,8 +49,7 @@ class ViteExtension extends Extension
 		return new AuxiliaryNode(fn (PrintContext $context) => $context->format(
 			<<<'LATTE'
 				array_map(function($a) use ($basePath) {
-					$nonce = $this->global->vite->getNonce();
-					$nonceAttr = $nonce ? ' nonce="' . htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') . '"' : '';
+					$nonceAttr = $this->global->uiNonce ? ' nonce="' . htmlspecialchars($this->global->uiNonce, ENT_QUOTES, 'UTF-8') . '"' : '';
 					echo '<script type="module" src="' . $basePath . $a. '"' . $nonceAttr . '></script>';
 				}, $this->global->vite->js(%node));
 				%line
@@ -71,8 +67,7 @@ class ViteExtension extends Extension
 		return new AuxiliaryNode(fn (PrintContext $context) => $context->format(
 			<<<'LATTE'
 				array_map(function($a) use ($basePath) {
-					$nonce = $this->global->vite->getNonce();
-					$nonceAttr = $nonce ? ' nonce="' . htmlspecialchars($nonce, ENT_QUOTES, 'UTF-8') . '"' : '';
+					$nonceAttr = $this->global->uiNonce ? ' nonce="' . htmlspecialchars($this->global->uiNonce, ENT_QUOTES, 'UTF-8') . '"' : '';
 					echo '<link rel="stylesheet" href="' . $basePath . $a. '"' . $nonceAttr . '>';
 				}, $this->global->vite->css(%node));
 				%line

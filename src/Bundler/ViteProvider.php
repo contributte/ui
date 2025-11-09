@@ -15,21 +15,13 @@ class ViteProvider
 
 	protected string $base;
 
-	protected ?string $nonce;
-
 	/** @var array<string, array{file: string, src: string, isEntry: bool, css: string[]}> */
 	protected array $manifest = [];
 
-	public function __construct(string $file, string $base = '/', ?string $nonce = null)
+	public function __construct(string $file, string $base = '/')
 	{
 		$this->file = $file;
 		$this->base = $base;
-		$this->nonce = $nonce;
-	}
-
-	public function getNonce(): ?string
-	{
-		return $this->nonce;
 	}
 
 	/**

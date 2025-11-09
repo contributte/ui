@@ -18,7 +18,6 @@ class ViteExtension extends CompilerExtension
 		return Expect::structure([
 			'manifest' => Expect::string()->default('%wwwDir%/dist/manifest.json'),
 			'base' => Expect::string()->default('/dist'),
-			'nonce' => Expect::string()->nullable(),
 		]);
 	}
 
