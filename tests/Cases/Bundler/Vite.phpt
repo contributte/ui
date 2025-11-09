@@ -22,3 +22,20 @@ Toolkit::test(function (): void {
 		'/dist/app.js',
 	], $provider->js('assets/js/app.js'));
 });
+
+Toolkit::test(function (): void {
+	// Verify nonce support is implemented in ViteExtension
+	$extensionCode = file_get_contents(__DIR__ . '/../../../src/Bundler/ViteExtension.php');
+
+	// Check tagVitejs method contains nonce handling
+	Assert::contains('$this->global->uiNonce', $extensionCode);
+	Assert::contains('htmlspecialchars($this->global->uiNonce', $extensionCode);
+	Assert::contains('nonce="', $extensionCode);
+
+	// Verify both script and link tags handle nonce
+	Assert::contains('<script type="module" src=', $extensionCode);
+	Assert::contains('<link rel="stylesheet" href=', $extensionCode);
+
+	// Verify that nonce is conditionally applied
+	Assert::contains('$nonceAttr = $this->global->uiNonce ?', $extensionCode);
+});
