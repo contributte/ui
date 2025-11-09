@@ -49,7 +49,8 @@ class ViteExtension extends Extension
 		return new AuxiliaryNode(fn (PrintContext $context) => $context->format(
 			<<<'LATTE'
 				array_map(function($a) use ($basePath) {
-					echo '<script type="module" src="' . $basePath . $a. '"></script>';
+					$nonceAttr = ($this->global->uiNonce ?? null) ? ' nonce="' . htmlspecialchars($this->global->uiNonce, ENT_QUOTES, 'UTF-8') . '"' : '';
+					echo '<script type="module" src="' . $basePath . $a. '"' . $nonceAttr . '></script>';
 				}, $this->global->vite->js(%node));
 				%line
 				echo "\n";
@@ -66,7 +67,8 @@ class ViteExtension extends Extension
 		return new AuxiliaryNode(fn (PrintContext $context) => $context->format(
 			<<<'LATTE'
 				array_map(function($a) use ($basePath) {
-					echo '<link rel="stylesheet" href="' . $basePath . $a. '">';
+					$nonceAttr = ($this->global->uiNonce ?? null) ? ' nonce="' . htmlspecialchars($this->global->uiNonce, ENT_QUOTES, 'UTF-8') . '"' : '';
+					echo '<link rel="stylesheet" href="' . $basePath . $a. '"' . $nonceAttr . '>';
 				}, $this->global->vite->css(%node));
 				%line
 				echo "\n";

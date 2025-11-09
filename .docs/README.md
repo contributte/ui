@@ -17,6 +17,30 @@ services:
 			- addExtension(App\Model\ViteExtension(%wwwDir%/dist/manifest.json, /dist))
 ```
 
+### CSP Nonce Support
+
+The Vite extension automatically supports Content Security Policy nonces via the `uiNonce` variable provided by [`nette/application`](https://github.com/nette/application).
+
+```latte
+{vitejs 'assets/js/app.js'}
+{vitecss 'assets/js/app.js'}
+```
+
+When nonce is available, it's automatically injected:
+
+```html
+<script type="module" src="/dist/app.js" nonce="..."></script>
+<link rel="stylesheet" href="/dist/app.css" nonce="...">
+```
+
+To use nonce support, ensure your Nette application sets the nonce value in presenter or middleware:
+
+```php
+$nonce = base64_encode(random_bytes(16));
+$this->template->uiNonce = $nonce;
+header("Content-Security-Policy: script-src 'nonce-{$nonce}'; style-src 'nonce-{$nonce}'");
+```
+
 ## Examples
 
 ### Vite
