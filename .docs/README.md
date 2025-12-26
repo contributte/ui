@@ -41,6 +41,79 @@ $this->template->uiNonce = $nonce;
 header("Content-Security-Policy: script-src 'nonce-{$nonce}'; style-src 'nonce-{$nonce}'");
 ```
 
+### Paginator
+
+Register the extension:
+
+```neon
+extensions:
+	paginator: Contributte\UI\DI\PaginatorExtension
+```
+
+Create a data provider:
+
+```php
+use Contributte\UI\Paginator\ArrayDataProvider;
+use Contributte\UI\Paginator\PaginatorDataProvider;
+use Nette\Utils\Paginator;
+
+// Using built-in ArrayDataProvider
+$provider = new ArrayDataProvider($data);
+
+// Or implement your own
+class MyDataProvider implements PaginatorDataProvider
+{
+	public function page(Paginator $paginator): array
+	{
+		$paginator->setItemCount($this->getTotalCount());
+		return $this->fetchItems($paginator->getOffset(), $paginator->getLength());
+	}
+}
+```
+
+Use in presenter:
+
+```php
+use Contributte\UI\Paginator\PaginatorControlFactory;
+
+class ArticlePresenter extends Nette\Application\UI\Presenter
+{
+	public function __construct(
+		private PaginatorControlFactory $paginatorFactory,
+	) {}
+
+	protected function createComponentPaginator(): PaginatorControl
+	{
+		$provider = new ArrayDataProvider($this->articles);
+		$control = $this->paginatorFactory->create($provider, itemsPerPage: 10);
+		$control->onPagination[] = fn() => $this->redrawControl('articles');
+		return $control;
+	}
+
+	public function renderDefault(): void
+	{
+		$this->template->articles = $this['paginator']->getPage();
+	}
+}
+```
+
+Render in template:
+
+```latte
+<div n:snippet="articles">
+	<div n:foreach="$articles as $article">...</div>
+	{control paginator}
+</div>
+```
+
+Custom template:
+
+```php
+$control->setTemplateFile(__DIR__ . '/templates/myPaginator.latte');
+```
+
+Built-in templates: `bootstrap4.latte`, `bootstrap5.latte` (default).
+
 ## Examples
 
 ### Vite
