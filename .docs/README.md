@@ -43,11 +43,11 @@ header("Content-Security-Policy: script-src 'nonce-{$nonce}'; style-src 'nonce-{
 
 ### Paginator
 
-Register the extension:
+Register the factory:
 
 ```neon
-extensions:
-	paginator: Contributte\UI\DI\PaginatorExtension
+services:
+	- Contributte\UI\Paginator\PaginatorControlFactory
 ```
 
 Create a data provider:
