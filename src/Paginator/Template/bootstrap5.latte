@@ -1,0 +1,15 @@
+<nav n:if="$paginator->getPageCount() !== 1" aria-label="Page navigation example">
+	<ul class="pagination justify-content-center">
+		<li n:class="page-item, $paginator->isFirst() ? disabled">
+			<a class="page-link" n:href="page!, page: max($paginator->getPage() - 1, $paginator->getFirstPage())" tabindex="-1">Previous</a>
+		</li>
+
+		<li n:foreach="$steps as $step" n:class="page-item, $paginator->getPage() === $step ? active" {if $paginator->getPage() === $step}aria-current="page"{/if}>
+			<a class="page-link" n:href="page!, page: $step">{$step}</a>
+		</li>
+
+		<li n:class="page-item, $paginator->isLast() ? disabled">
+			<a class="page-link" n:href="page!, page: min($paginator->getPage() + 1, $paginator->getLastPage())">Next</a>
+		</li>
+	</ul>
+</nav>
