@@ -3,7 +3,7 @@ includes:
 
 parameters:
 	level: 9
-	phpVersion: 80100
+	phpVersion: 80200
 
 	scanDirectories:
 		- src
@@ -16,3 +16,4 @@ parameters:
 		- .docs
 
 	ignoreErrors:
+		- '#Parameter \#1 \$callbacks of static method Nette\\Utils\\Arrays::invoke\(\) expects#'
