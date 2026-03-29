@@ -8,6 +8,74 @@ composer require contributte/ui
 
 ## Usage
 
+### Inertia
+
+Register the extension:
+
+```neon
+extensions:
+	inertia: Contributte\UI\DI\InertiaExtension
+
+inertia:
+	manifest: %wwwDir%/dist/manifest.json
+	# rootId: app
+	# template: %appDir%/UI/@Templates/@inertia.latte
+```
+
+Use the presenter trait:
+
+```php
+use Contributte\UI\Inertia\Presenter\TInertiaPresenter;
+use Nette\Application\UI\Presenter;
+
+abstract class BasePresenter extends Presenter
+{
+	use TInertiaPresenter;
+}
+```
+
+Render an Inertia page from a presenter:
+
+```php
+final class DashboardPresenter extends BasePresenter
+{
+	public function renderDefault(): void
+	{
+		$this->inertia('Dashboard/Index', [
+			'user' => ['name' => 'Felix'],
+			'stats' => fn (): array => [1, 2, 3],
+		]);
+	}
+}
+```
+
+If you want a custom root template, point the extension to your own Latte file and use the provided helpers:
+
+```latte
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{vitecss 'assets/js/app.ts'}
+	{vitejs 'assets/js/app.ts'}
+	{=inertiaHead()}
+</head>
+<body>
+	{=inertia($page)}
+</body>
+</html>
+```
+
+The integration supports:
+
+- initial HTML bootstrap with `data-page`
+- JSON Inertia responses via `X-Inertia: true`
+- asset version checks via `manifest`
+- `409 + X-Inertia-Location` on stale assets
+- partial reload filtering via `X-Inertia-Partial-*`
+- session-backed validation errors via `inertiaErrors()`
+
 ### Bundler
 
 ```neon
